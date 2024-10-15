@@ -1,39 +1,44 @@
 <?php
-session_start();
-$username = $_SESSION['lastname'];
+  session_start();
+  require '../includes/DatabaseConnexion.php';
+  $query_nbr_salle = $dbh->query("SELECT COUNT(*) FROM salle ");
+  $nbr_salle = $query_nbr_salle->fetchColumn(); // Récupère le nombre total de salles
+  // $username = $_SESSION['lastname'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/icons/flags/AU.png"><?php //! changer lien  
-                                                                            ?>
-  <title>
-    Gestion Ecole
-  </title>
-  <!--     Fonts and icons     -->
+  <link rel="icon" type="image/png" href="../assets/img/icons/flags/AU.png">
+  <title>Gestion Ecole</title>
+  
+  <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-
+  
+  <!-- Font Awesome CDN - Version 6.6.0 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
 </head>
+
 
 <body class="g-sidenav-show   bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html " target="_blank">
-        <img src="../assets/img/icons/flags/AU.png" class="navbar-brand-img h-100" alt="main_logo">
+      <a class="navbar-brand m-0" href="#" target="_blank">
+        <!-- <img src="../assets/img/icons/flags/AU.png" class="navbar-brand-img h-100" alt="main_logo"> -->
+        <img src="https://elaraki.ac.ma/images/logo2.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">
         <?= strtoupper($_SESSION['nom_admin']." ".$_SESSION['prenom_admin'])  ?>
         </span>
@@ -62,8 +67,8 @@ $username = $_SESSION['lastname'];
         <li class="nav-item">
           <a class="nav-link " href="../pages/salle.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <!-- <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i> -->
-              <i class="fa-solid fa-people-roof"></i>
+              <i class="ni ni-building text-primary text-sm opacity-10"></i>
+              <!-- <i class="fa-solid fa-people-roof"></i> -->
             </div>
             <span class="nav-link-text ms-1">Salles</span>
           </a>
@@ -269,6 +274,107 @@ $username = $_SESSION['lastname'];
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Nombre Salle</p>
+                    <h5 class="font-weight-bolder">
+                      <?= $nbr_salle //*nombre salle ; ?>
+                    </h5>
+                    <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">+55%</span>
+                      since yesterday
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                    <h5 class="font-weight-bolder">
+                      2,300
+                    </h5>
+                    <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      since last week
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                    <h5 class="font-weight-bolder">
+                      +3,462
+                    </h5>
+                    <p class="mb-0">
+                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                      since last quarter
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
+                    <h5 class="font-weight-bolder">
+                      $103,430
+                    </h5>
+                    <p class="mb-0">
+                      <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
+                    </p>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
                     <h5 class="font-weight-bolder">
                       $53,000
@@ -362,7 +468,7 @@ $username = $_SESSION['lastname'];
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="row mt-4">
         <div class="col-lg-7 mb-lg-0 mb-4">
           <div class="card z-index-2 h-100">

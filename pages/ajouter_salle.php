@@ -1,12 +1,53 @@
 <?php
-require '../includes/DatabaseConnexion.php';
 session_start();
+require '../includes/DatabaseConnexion.php';
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
+  // Récupérer et valider les données du formulaire
+  $nom_salle = htmlspecialchars(trim($_POST['nom_salle']));
+  $equipement = htmlspecialchars(trim($_POST['equipement']));
+  $etage = filter_var($_POST['etage'], FILTER_VALIDATE_INT);
+  $capacite = filter_var($_POST['capacite'], FILTER_VALIDATE_INT);
+  $nombre_chaise = filter_var($_POST['nombre_chaise'], FILTER_VALIDATE_INT);
+  $nombre_bureau = filter_var($_POST['nombre_bureau'], FILTER_VALIDATE_INT);
+  $nombre_tableau = filter_var($_POST['nombre_tableau'], FILTER_VALIDATE_INT);
 
-$sql = "SELECT * FROM salle";
-$query = $dbh->query($sql);
-$results = $query->fetchAll(PDO::FETCH_OBJ);
+  // Vérifier que toutes les données sont valides avant de continuer
+  if (!$etage || !$capacite || !$nombre_chaise || !$nombre_bureau || !$nombre_tableau) {
+    echo "Veuillez entrer des valeurs valides.";
+    exit();
+  }
+
+  try {
+    // Préparer et exécuter la requête SQL avec des paramètres liés pour éviter les injections SQL
+    $ajouter = $dbh->prepare("INSERT INTO salle (nom_salle, capacite_salle, etage ,equipements, nbr_chaise, nbr_bureau, nbr_tableau)
+                  VALUES (:nom_salle, :equipement, :etage, :capacite, :nombre_chaise, :nombre_bureau, :nombre_tableau)");
+
+    // Liaison des paramètres
+    $ajouter->bindParam(':nom_salle', $nom_salle);
+    $ajouter->bindParam(':equipement', $equipement);
+    $ajouter->bindParam(':etage', $etage);
+    $ajouter->bindParam(':capacite', $capacite);
+    $ajouter->bindParam(':nombre_chaise', $nombre_chaise);
+    $ajouter->bindParam(':nombre_bureau', $nombre_bureau);
+    $ajouter->bindParam(':nombre_tableau', $nombre_tableau);
+
+    // Exécuter la requête
+    if ($ajouter->execute()) {
+      header('Location: salle.php');
+      exit();
+    } else {
+      echo "Erreur lors de l'insertion.";
+    }
+  } catch (PDOException $e) {
+    echo "Erreur de base de données : " . $e->getMessage();
+  }
+}
 
 ?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,8 +56,10 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
 
 
 
-<body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+<body class="g-sidenav-show bg-gray-100">
+  <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
+    <span class="mask bg-primary opacity-6"></span>
+  </div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -131,38 +174,40 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
       <a class="btn btn-primary btn-sm mb-0 w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a> -->
     </div>
   </aside>
-  <main class="main-content position-relative border-radius-lg ">
+  <div class="main-content position-relative max-height-vh-100 h-100">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
+    <nav class="navbar navbar-main navbar-expand-lg bg-transparent shadow-none position-absolute px-4 w-100 z-index-2 mt-n11">
+      <div class="container-fluid py-1">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Tables</li>
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 ps-2 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="text-white opacity-5" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Profile</li>
           </ol>
-          <h6 class="font-weight-bolder text-white mb-0">Tables</h6>
+          <h6 class="text-white font-weight-bolder ms-2">Profile</h6>
         </nav>
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <div class="collapse navbar-collapse me-md-0 me-sm-4 mt-sm-0 mt-2" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
               <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
               <input type="text" class="form-control" placeholder="Type here...">
             </div>
           </div>
-          <ul class="navbar-nav  justify-content-end">
+          <ul class="navbar-nav justify-content-end">
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">Sign In</span>
               </a>
             </li>
-            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                </div>
+            <li class="nav-item d-xl-none ps-3 pe-0 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-white p-0">
+                <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                  <div class="sidenav-toggler-inner">
+                    <i class="sidenav-toggler-line bg-white"></i>
+                    <i class="sidenav-toggler-line bg-white"></i>
+                    <i class="sidenav-toggler-line bg-white"></i>
+                  </div>
+                </a>
               </a>
             </li>
             <li class="nav-item px-3 d-flex align-items-center">
@@ -174,12 +219,12 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
               <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell cursor-pointer"></i>
               </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+              <ul class="dropdown-menu dropdown-menu-end px-2 py-3 ms-n4" aria-labelledby="dropdownMenuButton">
                 <li class="mb-2">
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
@@ -197,7 +242,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
@@ -214,7 +259,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                 <li>
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                      <div class="avatar avatar-sm bg-gradient-secondary me-3 my-auto">
                         <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                           <title>credit-card</title>
                           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -248,104 +293,136 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
       </div>
     </nav>
     <!-- End Navbar -->
+    <div class="card shadow-lg mx-4 card-profile-bottom">
+
+    </div>
     <div class="container-fluid py-4">
       <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
+        <div class="col-md-8">
+          <div class="card">
             <div class="card-header pb-0">
-              <!-- <h6>Authors table</h6> -->
               <div class="d-flex align-items-center">
-                <p class="mb-0">Edit Profile</p>
-                <a class="btn btn-primary btn-sm ms-auto" href="ajouter_salle.php">Ajouter Salle</a>
+                <p class="mb-0">Ajouter Salle</p>
+                <!-- <  button class="btn btn-primary btn-sm ms-auto">Settings</> -->
               </div>
             </div>
-            <div id="editData" class="modal fade">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Modifier Salle</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="info_update">
-                            <!-- Le contenu sera chargé ici par AJAX -->
-                            <?php
-                              include("edit_salle.php");
-                            ?>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        </div>
+            <hr class="horizontal dark">
+            <form method="post">
+              <div class="card-body">
+                <p class="text-uppercase text-sm">Salle Information</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Nom Salle</label>
+                      <input class="form-control" type="text" value="" name="nom_salle">
                     </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Equipement</label>
+                      <input class="form-control" type="text" value="" name="equipement">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Etage</label>
+                      <select class="form-select" name="etage">
+                        <option value="0">Rez de chaussée</option>
+                        <option value="1">Etage 1</option>
+                        <option value="2">Etage 2</option>
+                        <option value="3">Etage 3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Capacite Eleve</label>
+                      <input class="form-control" type="number" value="" name="capacite" min="10" max="30">
+                    </div>
+                  </div>
                 </div>
+                <hr class="horizontal dark">
+                <p class="text-uppercase text-sm">Nombre Equipement </p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Nombre Chaise</label>
+                      <input class="form-control" type="number" min="10" max="15" name="nombre_chaise">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Nombre Bureau</label>
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_bureau">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Nombre Tableau</label>
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_tableau">
+                    </div>
+                  </div>
+                </div>
+                <hr class="horizontal dark">
+                <div class="row">
+                  <input class="btn btn-primary" type="submit" value="Ajouter" name="ajouter">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-profile">
+            <img src="../assets/img/bg-profile.jpg" alt="Image placeholder" class="card-img-top">
+            <div class="row justify-content-center">
+              <div class="col-4 col-lg-4 order-lg-2">
+                <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
+                  <a href="javascript:;">
+                    <img src="../assets/img/team-2.jpg" class="rounded-circle img-fluid border border-2 border-white">
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom Salle</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Capacite Eleve</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Etage</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">N° Chaise</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Bureau</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Tableau</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Equipement</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php if ($query->rowCount() > 0) : ?>
-                      <?php foreach ($results as $result) : ?>
-                        <tr>
-                          <td>
-                            <div class="d-flex px-2 py-1">
-                              <div>
-                                <img src="https://elaraki.ac.ma/images/logo2.png" class="avatar avatar-sm me-3" alt="user1">
-                              </div>
-                              <div class="d-flex flex-column justify-content-center">
-                                <?= $result->nom_salle; ?>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <p class="text-xs font-weight-bold mb-0 ms-lg-5 ms-5"><?= $result->capacite_salle; ?></p>
-                          </td>
-                          <td class="align-middle text-center text-sm">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->etage; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_chaise; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_bureau; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_tableau; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <?php
-                            $equipements = $result->equipements;
-                            $equipement = explode("-", $equipements);
-                            foreach ($equipement as $equi) :
-                            ?>
-                              <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
-                            <?php endforeach; ?>
-                          </td>
-                          <td class="align-middle text-center">
-                            <a href="">
-                              <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?php echo  $result->id_salle ?>" ></i>
-                            </a>
-                            <a href="">
-                              <i class="ni ni-fat-remove text-danger ms-1 opacity-10 "id="<?php echo  $result->id_salle ?>"></i>
-                            </a>
-                          </td>
-                        </tr>
-                      <?php endforeach; ?>
-                    <?php endif; ?>
-                  </tbody>
-                </table>
+            <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
+              <div class="d-flex justify-content-between">
+                <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-none d-lg-block">Connect</a>
+                <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
+                <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-none d-lg-block">Message</a>
+                <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
+              </div>
+            </div>
+            <div class="card-body pt-0">
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex justify-content-center">
+                    <div class="d-grid text-center">
+                      <span class="text-lg font-weight-bolder">22</span>
+                      <span class="text-sm opacity-8">Friends</span>
+                    </div>
+                    <div class="d-grid text-center mx-4">
+                      <span class="text-lg font-weight-bolder">10</span>
+                      <span class="text-sm opacity-8">Photos</span>
+                    </div>
+                    <div class="d-grid text-center">
+                      <span class="text-lg font-weight-bolder">89</span>
+                      <span class="text-sm opacity-8">Comments</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center mt-4">
+                <h5>
+                  Mark Davis<span class="font-weight-light">, 35</span>
+                </h5>
+                <div class="h6 font-weight-300">
+                  <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                </div>
+                <div class="h6 mt-4">
+                  <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
+                </div>
+                <div>
+                  <i class="ni education_hat mr-2"></i>University of Computer Science
+                </div>
               </div>
             </div>
           </div>
@@ -355,26 +432,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
       <?php include '../includes/footer.php' ?>
 
     </div>
-  </main>
-
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/7/zF5YfK6w2H5P5uY3/I5n8ALZ+7qv29ncm2Tf" crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $(document).on('click','.edit_data',function(){
-        var edit_id=$(this).attr('id');
-        $.ajax({
-          url:"edit_salle.php",
-          type:"post",
-          data:{edit_id:edit_id},
-          success:function(data){
-            $("#info_update").html(data);
-            $("#editData").modal('show');
-          }
-        });
-      });
-    });
-  </script>
+  </div>
   <!-- FIXED PLUGIN  -->
   <?php include '../includes/fixedplugin.php' ?>
   <!--   Core JS Files   -->
