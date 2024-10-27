@@ -68,11 +68,11 @@
           <a class="nav-link " href="../pages/salle.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-building text-primary text-sm opacity-10"></i>
-              <!-- <i class="fa-solid fa-people-roof"></i> -->
             </div>
             <span class="nav-link-text ms-1">Salles</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link " href="../pages/billing.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -944,6 +944,8 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+  </script>
+  <script>
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

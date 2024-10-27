@@ -6,14 +6,50 @@ $sql = "SELECT * FROM salle";
 $query = $dbh->query($sql);
 $results = $query->fetchAll(PDO::FETCH_OBJ);
 
+try {
+  // Configuration de PDO pour lever des exceptions en cas d'erreur
+  $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  // Vérification de l'existence des paramètres GET et validation de l'ID
+  if (!empty($_GET['id']) && isset($_GET['del']) && $_GET['del']==='1' ){
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+    
+    // Si l'ID n'est pas valide, redirigez vers une page d'erreur ou arrêtez le script
+    if ($id === false) {
+      echo "<script>alert('ID invalide. Opération annulée.');</script>";
+      exit;
+    }
+
+    // Requête sécurisée avec PDO
+    $sql = "DELETE FROM salle WHERE id_salle = :id";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':id', $id, PDO::PARAM_INT);
+
+    // Exécution de la requête et gestion des erreurs
+    if ($query->execute()) {
+      echo "<script>alert('Salle Bien Supprimée');</script>";
+      
+      // Utilisez une redirection sécurisée
+      header("Location: salle.php");
+      exit;
+    } else {
+      // Affichage d'un message d'erreur générique pour éviter de donner des détails à un attaquant
+      echo "<script>alert('Erreur lors de la suppression.');</script>";
+    }
+  }
+} catch (PDOException $e) {
+  // Journalisez l'erreur dans un fichier sécurisé
+  error_log($e->getMessage(), 3, '/path/to/secure_log_file.log');
+  echo "<script>alert('Une erreur est survenue. Veuillez réessayer plus tard.');</script>";
+  exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <!-- HEAD -->
 <?php include '../includes/head.php' ?>
-
-
 
 <body class="g-sidenav-show   bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
@@ -280,74 +316,78 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                     </div>
                 </div>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom Salle</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Capacite Eleve</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Etage</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">N° Chaise</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Bureau</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Tableau</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Equipement</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php if ($query->rowCount() > 0) : ?>
-                      <?php foreach ($results as $result) : ?>
-                        <tr>
-                          <td>
-                            <div class="d-flex px-2 py-1">
-                              <div>
-                                <img src="https://elaraki.ac.ma/images/logo2.png" class="avatar avatar-sm me-3" alt="user1">
+            <form method="post">
+              <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                  <table class="table align-items-center mb-0">
+                    <thead>
+                      <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom Salle</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Etage</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Capacite Eleve</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">N° Chaise</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Bureau</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Tableau</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Equipement</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php if ($query->rowCount() > 0) : ?>
+                        <?php foreach ($results as $result) : ?>
+                          <tr>
+                            <td>
+                              <div class="d-flex px-2 py-1">
+                                <div>
+                                  <img src="https://elaraki.ac.ma/images/logo2.png" class="avatar avatar-sm me-3" alt="user1">
+                                </div>
+                                <div class="d-flex flex-column justify-content-center">
+                                  <?= $result->nom_salle; ?>
+                                </div>
                               </div>
-                              <div class="d-flex flex-column justify-content-center">
-                                <?= $result->nom_salle; ?>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <p class="text-xs font-weight-bold mb-0 ms-lg-5 ms-5"><?= $result->capacite_salle; ?></p>
-                          </td>
-                          <td class="align-middle text-center text-sm">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->etage; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_chaise; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_bureau; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_tableau; ?></p>
-                          </td>
-                          <td class="align-middle text-center">
-                            <?php
-                            $equipements = $result->equipements;
-                            $equipement = explode("-", $equipements);
-                            foreach ($equipement as $equi) :
-                            ?>
-                              <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
-                            <?php endforeach; ?>
-                          </td>
-                          <td class="align-middle text-center">
-                            <a href="">
-                              <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?php echo  $result->id_salle ?>" ></i>
-                            </a>
-                            <a href="">
-                              <i class="ni ni-fat-remove text-danger ms-1 opacity-10 "id="<?php echo  $result->id_salle ?>"></i>
-                            </a>
-                          </td>
-                        </tr>
-                      <?php endforeach; ?>
-                    <?php endif; ?>
-                  </tbody>
-                </table>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                              <p class="text-xs font-weight-bold mb-0"><?= $result->etage; ?></p>
+                            </td>
+                            <td>
+                              <p class="text-xs font-weight-bold mb-0 ms-lg-5 ms-5"><?= $result->capacite_salle; ?></p>
+                            </td>
+                            <td class="align-middle text-center">
+                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_chaise; ?></p>
+                            </td>
+                            <td class="align-middle text-center">
+                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_bureau; ?></p>
+                            </td>
+                            <td class="align-middle text-center">
+                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_tableau; ?></p>
+                            </td>
+                            <td class="align-middle text-center">
+                              <?php
+                              $equipements = $result->equipements;
+                              $equipement = explode("-", $equipements);
+                              foreach ($equipement as $equi) :
+                              ?>
+                                <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
+                              <?php endforeach; ?>
+                            </td>
+                            <td class="align-middle text-center">
+                              <a href="">
+                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?php echo  $result->id_salle ?>" ></i>
+                              </a>
+                              <a href="salle.php?id=<?= $result->id_salle ?>&del=1">
+                                  <i class="ni ni-fat-remove text-danger ms-1 opacity-10" id="<?= $result->id_salle ?>"></i>
+                              </a>
+                              <!-- <a href="">
+                              </a> -->
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

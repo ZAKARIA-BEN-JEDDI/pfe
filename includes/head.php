@@ -20,4 +20,37 @@
     <!-- CSS Files -->
     <link  href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" /><?php //! changer lien   ?>
     <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylsheet">
+
+
+
+    <style>
+        body {
+  box-sizing: border-box;
+  padding: 0;
+  margin:0;
+  background-color: white;
+  height: 100vh;
+}
+
+.cursor {
+    pointer-events: none;
+    position: fixed;
+    display: block;
+    border-radius: 0;
+    mix-blend-mode: difference;
+    top: 0;
+    left: 0;
+    z-index: 9999999999999999;
+}
+
+.circle {
+    position: absolute;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+    </style>
 </head>

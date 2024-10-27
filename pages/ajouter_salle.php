@@ -20,20 +20,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
   try {
     // Préparer et exécuter la requête SQL avec des paramètres liés pour éviter les injections SQL
     $ajouter = $dbh->prepare("INSERT INTO salle (nom_salle, capacite_salle, etage ,equipements, nbr_chaise, nbr_bureau, nbr_tableau)
-                  VALUES (:nom_salle, :equipement, :etage, :capacite, :nombre_chaise, :nombre_bureau, :nombre_tableau)");
+                  VALUES (:nom_salle, :capacite , :etage, :equipement, :nombre_chaise, :nombre_bureau, :nombre_tableau)");
 
     // Liaison des paramètres
     $ajouter->bindParam(':nom_salle', $nom_salle);
-    $ajouter->bindParam(':equipement', $equipement);
-    $ajouter->bindParam(':etage', $etage);
     $ajouter->bindParam(':capacite', $capacite);
+    $ajouter->bindParam(':etage', $etage);
+    $ajouter->bindParam(':equipement', $equipement);
     $ajouter->bindParam(':nombre_chaise', $nombre_chaise);
     $ajouter->bindParam(':nombre_bureau', $nombre_bureau);
     $ajouter->bindParam(':nombre_tableau', $nombre_tableau);
 
     // Exécuter la requête
     if ($ajouter->execute()) {
-      header('Location: salle.php');
+      header('Location:salle.php');
       exit();
     } else {
       echo "Erreur lors de l'insertion.";
