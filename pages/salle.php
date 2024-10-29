@@ -6,6 +6,7 @@ $sql = "SELECT * FROM salle";
 $query = $dbh->query($sql);
 $results = $query->fetchAll(PDO::FETCH_OBJ);
 
+
 try {
   // Configuration de PDO pour lever des exceptions en cas d'erreur
   $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -43,6 +44,7 @@ try {
   echo "<script>alert('Une erreur est survenue. Veuillez réessayer plus tard.');</script>";
   exit;
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -291,35 +293,36 @@ try {
             <div class="card-header pb-0">
               <!-- <h6>Authors table</h6> -->
               <div class="d-flex align-items-center">
-                <p class="mb-0">Edit Profile</p>
+                <p class="mb-0">Salle</p>
                 <a class="btn btn-primary btn-sm ms-auto" href="ajouter_salle.php">Ajouter Salle</a>
+                <button type="button" class="btn btn-primary btn-sm ms-auto" onclick="expo()" id='btnexp'>Exporter</button>
               </div>
             </div>
-            <div id="editData" class="modal fade">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Modifier Salle</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="info_update">
-                            <!-- Le contenu sera chargé ici par AJAX -->
-                            <?php
-                              include("edit_salle.php");
-                            ?>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              <div id="editData" class="modal fade text-center" tabindex="-1">
+                  <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title">Modifier Salle</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body" id="info_update">
+                              <!-- Le contenu sera chargé ici par AJAX -->
+                              <?php
+                                include("edit_salle.php");
+                              ?>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             <form method="post">
               <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
-                  <table class="table align-items-center mb-0">
+                  <table class="table align-items-center mb-0" id="table_salle">
                     <thead>
                       <tr>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom Salle</th>
@@ -333,7 +336,7 @@ try {
                       </tr>
                     </thead>
                     <tbody>
-                      <?php if ($query->rowCount() > 0) : ?>
+                      <?php if ($query->rowCount() > 0) { ?>
                         <?php foreach ($results as $result) : ?>
                           <tr>
                             <td>
@@ -371,8 +374,8 @@ try {
                               <?php endforeach; ?>
                             </td>
                             <td class="align-middle text-center">
-                              <a href="">
-                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?php echo  $result->id_salle ?>" ></i>
+                              <a href="javascript:void(0);">
+                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?= $result->id_salle ?>" ></i>
                               </a>
                               <a href="salle.php?id=<?= $result->id_salle ?>&del=1">
                                   <i class="ni ni-fat-remove text-danger ms-1 opacity-10" id="<?= $result->id_salle ?>"></i>
@@ -382,7 +385,13 @@ try {
                             </td>
                           </tr>
                         <?php endforeach; ?>
-                      <?php endif; ?>
+                      <?php }else { ?> 
+                          <tr rowspan="7"  class="text-center">
+                            <td  class="text-center">
+                              No Content
+                            </td>
+                          </tr>
+                      <?php  }?>
                     </tbody>
                   </table>
                 </div>
@@ -397,24 +406,97 @@ try {
     </div>
   </main>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/7/zF5YfK6w2H5P5uY3/I5n8ALZ+7qv29ncm2Tf" crossorigin="anonymous"></script>
+  <!-- Ton script AJAX pour l'édition de la salle -->
   <script type="text/javascript">
-    $(document).ready(function(){
-      $(document).on('click','.edit_data',function(){
-        var edit_id=$(this).attr('id');
-        $.ajax({
-          url:"edit_salle.php",
-          type:"post",
-          data:{edit_id:edit_id},
-          success:function(data){
-            $("#info_update").html(data);
-            $("#editData").modal('show');
+    function expo(){
+      // alert("Bien Exporter")
+      // Capturez le texte saisi dans l'input de recherche
+      var searchValue = $('#example1_filter input').val();
+
+      // Appliquez le filtre à la DataTable
+      var table = $('#table_salle').DataTable();
+      table.search(searchValue).draw();
+
+      // Créez un tableau pour stocker les données
+      var data = [];
+
+      // Obtenez les en-têtes de colonne de la DataTable
+      var headers = [];
+      table.columns().every(function () {
+          if(this.header().textContent !="ACTION"){
+            headers.push(this.header().textContent);
           }
-        });
       });
+      data.push(headers);
+      // Obtenez les données filtrées
+      var filteredData = table.rows({ filter: 'applied' }).data();
+      // Parcourez les données filtrées et ajoutez-les au tableau
+      filteredData.each(function (valueArray) {
+          var rowData = [];
+          valueArray.forEach(function (value,index) {
+              
+              if (index !=6) {
+                  // rowData.push(value);
+                  // Vérifiez si la cellule contient une balise <a>
+                  if (/<a[^>]*>([^<]+)<\/a>/.test(value)) {
+                      // Extraire le texte de la balise <a>
+                      var linkText = $(value).text();
+                      rowData.push(linkText);
+                  } else {
+                      rowData.push(value);
+                  }
+              }
+          });
+          data.push(rowData);
+      });
+
+      // Créez un nouveau classeur Excel
+      var workbook = new ExcelJS.Workbook();
+      var worksheet = workbook.addWorksheet('CALEDRIER');
+
+      // Ajoutez les données au classeur Excel
+      data.forEach(function (row) {
+          worksheet.addRow(row);
+      });
+
+      // Génèrez un blob de données Excel
+      workbook.xlsx.writeBuffer().then(function (buffer) {
+          // Créez un objet blob
+          var blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          // Créez un objet URL pour le blob
+          var url = window.URL.createObjectURL(blob);
+          // Créez un lien pour le téléchargement du fichier Excel
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'facture_payer.xlsx';
+          // Ajoutez le lien à la page et déclenchez le téléchargement
+          document.body.appendChild(a);
+          a.click();
+
+          // Libérez l'URL de l'objet blob
+          window.URL.revokeObjectURL(url);
+      });
+    }
+
+    $(document).ready(function(){
+        $(document).on('click','.edit_data',function(){
+            var edit_id=$(this).attr('id');
+            $.ajax({
+                url:"edit_salle.php",
+                type:"post",
+                data:{edit_id:edit_id},
+                success:function(data){
+                    $("#info_update").html(data);
+                    $("#editData").modal('show');
+                }
+            });
+        });
     });
   </script>
+
   <!-- FIXED PLUGIN  -->
   <?php include '../includes/fixedplugin.php' ?>
   <!--   Core JS Files   -->
