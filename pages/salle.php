@@ -366,19 +366,22 @@ try {
                             </td>
                             <td class="align-middle text-center">
                               <?php
-                              $equipements = $result->equipements;
-                              $equipement = explode("-", $equipements);
-                              foreach ($equipement as $equi) :
+                                $equipements = $result->equipements;
+                                $equipement = explode("-", $equipements);
+                                foreach ($equipement as $equi) :
                               ?>
-                                <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
+                              <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
                               <?php endforeach; ?>
                             </td>
                             <td class="align-middle text-center">
                               <a href="javascript:void(0);">
-                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data" id="<?= $result->id_salle ?>" ></i>
+                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data ni-sm" id="<?= $result->id_salle ?>" ></i>
                               </a>
-                              <a href="salle.php?id=<?= $result->id_salle ?>&del=1">
-                                  <i class="ni ni-fat-remove text-danger ms-1 opacity-10" id="<?= $result->id_salle ?>"></i>
+                              <a href="salle.php?id=<?= $result->id_salle ?>&del=1" onClick="return confirm('Etes-vous sûr que vous voulez supprimer?')">
+                                  <i class="ni ni-fat-remove text-danger ms-1 opacity-10 ni-sm" id="<?= $result->id_salle ?>"></i>
+                              </a>
+                              <a href="description_salle.php?id=<?= $result->id_salle  ?>">
+                                <i class="fas fa-eye text-primary ms-1 opacity-10 fa-sm"></i>
                               </a>
                               <!-- <a href="">
                               </a> -->

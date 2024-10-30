@@ -12,8 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
   $nombre_tableau = filter_var($_POST['nombre_tableau'], FILTER_VALIDATE_INT);
 
   // Vérifier que toutes les données sont valides avant de continuer
-  if (!$etage || !$capacite || !$nombre_chaise || !$nombre_bureau || !$nombre_tableau) {
-    echo "Veuillez entrer des valeurs valides.";
+  if (!$capacite || !$nombre_chaise || !$nombre_bureau || !$nombre_tableau) {
+    echo "<script>alert('Veuillez saisir des valeur');</script>";
+    header('location:ajouter_salle.php');
     exit();
   }
 
@@ -314,19 +315,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nom Salle</label>
-                      <input class="form-control" type="text" value="" name="nom_salle">
+                      <input class="form-control" type="text" value="" name="nom_salle" id="nom_salle" onchange="nom_salleChange()">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Equipement</label>
-                      <input class="form-control" type="text" value="" name="equipement">
+                      <input class="form-control" type="text" value="" name="equipement" id="equipement" onchange="equipementChange()">
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Etage</label>
-                      <select class="form-select" name="etage">
+                      <label for="example-text-input" class="form-control-label" id="etage">Etage</label>
+                      <select class="form-select" name="etage" id="etage" onchange="etageChange()">
                         <option value="0">Rez de chaussée</option>
                         <option value="1">Etage 1</option>
                         <option value="2">Etage 2</option>
@@ -337,7 +338,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Capacite Eleve</label>
-                      <input class="form-control" type="number" value="" name="capacite" min="10" max="30">
+                      <input class="form-control" type="number" value="" name="capacite" min="10" max="30" id="capacite" onchange="capaciteChange()">
                     </div>
                   </div>
                 </div>
@@ -347,19 +348,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Chaise</label>
-                      <input class="form-control" type="number" min="10" max="15" name="nombre_chaise">
+                      <input class="form-control" type="number" min="10" max="15" name="nombre_chaise" id="chaise"  onchange="chaiseChange()">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Bureau</label>
-                      <input class="form-control" type="number" min="1" max="2" name="nombre_bureau">
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_bureau" id="bureau"  onchange="bureauChange()">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Tableau</label>
-                      <input class="form-control" type="number" min="1" max="2" name="nombre_tableau">
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_tableau" id="tableau"  onchange="tableauChange()">
                     </div>
                   </div>
                 </div>
@@ -383,45 +384,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                 </div>
               </div>
             </div>
-            <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
+            <!-- <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
               <div class="d-flex justify-content-between">
                 <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-none d-lg-block">Connect</a>
                 <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
                 <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-none d-lg-block">Message</a>
                 <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
               </div>
-            </div>
-            <div class="card-body pt-0">
+            </div> -->
+            <div class="card-body pt-0 mb-5">
               <div class="row">
                 <div class="col">
                   <div class="d-flex justify-content-center">
                     <div class="d-grid text-center">
-                      <span class="text-lg font-weight-bolder">22</span>
-                      <span class="text-sm opacity-8">Friends</span>
+                      <span class="text-lg font-weight-bolder" id="chaise_value"></span>
+                      <span class="text-sm opacity-8">Chaise </span>
                     </div>
                     <div class="d-grid text-center mx-4">
-                      <span class="text-lg font-weight-bolder">10</span>
-                      <span class="text-sm opacity-8">Photos</span>
+                      <span class="text-lg font-weight-bolder" id="bureau_value"></span>
+                      <span class="text-sm opacity-8">Bureau </span>
                     </div>
                     <div class="d-grid text-center">
-                      <span class="text-lg font-weight-bolder">89</span>
-                      <span class="text-sm opacity-8">Comments</span>
+                      <span class="text-lg font-weight-bolder" id="tableau_value"></span>
+                      <span class="text-sm opacity-8">Tableau</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="text-center mt-4">
                 <h5>
-                  Mark Davis<span class="font-weight-light">, 35</span>
+                  Nom Salle :<span class="font-weight-light" id="nom_salle_value"></span>
                 </h5>
                 <div class="h6 font-weight-300">
-                  <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                  <i class="ni location_pin mr-2"></i>Etage : <span class="font-weight-light" id="etage_value"></span>
                 </div>
-                <div class="h6 mt-4">
-                  <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
+                <div class="h6 font-weight-300">
+                  <i class="ni location_pin mr-2"></i>
+                  Equipement : <span class="font-weight-light" id="equipement_value"></span>
                 </div>
-                <div>
-                  <i class="ni education_hat mr-2"></i>University of Computer Science
+                <div class="h6 font-weight-300">
+                  <i class="ni location_pin mr-2"></i>
+                  Capacite Eleve : <span class="font-weight-light" id="capacite_value"></span>
                 </div>
               </div>
             </div>
@@ -447,6 +450,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
         damping: '0.5'
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <script>
+    const nom_salleChange = () =>{
+      document.getElementById("nom_salle_value").innerText = document.getElementById("nom_salle").value ;
+    }
+    const capaciteChange = () =>{
+      document.getElementById("capacite_value").innerText = document.getElementById("capacite").value ;
+    }
+    const etageChange = () => {
+      console.log(document.getElementById("etage").value);
+      document.getElementById("etage_value").innerText = document.getElementById("etage").value;
+    };
+    const equipementChange = () =>{
+      document.getElementById("equipement_value").innerText = document.getElementById("equipement").value ;
+    }
+    const chaiseChange = () =>{
+      document.getElementById("chaise_value").innerText = document.getElementById("chaise").value ;
+    }
+    const bureauChange = () =>{
+      document.getElementById("bureau_value").innerText = document.getElementById("bureau").value ;
+    }
+    const tableauChange = () =>{
+      document.getElementById("tableau_value").innerText = document.getElementById("tableau").value ;
     }
   </script>
   <!-- Github buttons -->
