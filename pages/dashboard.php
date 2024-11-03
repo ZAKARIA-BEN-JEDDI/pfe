@@ -279,14 +279,15 @@
                       <?= $nbr_salle //*nombre salle ; ?>
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
-                      since yesterday
+                      <span class="text-success text-sm font-weight-bolder">11</span>
+                      Salles actuellement  
                     </p>
                   </div>
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                    <!-- <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i> -->
+                    <i class="ni ni-building text-light text-lg opacity-10"></i>
                   </div>
                 </div>
               </div>

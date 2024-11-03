@@ -459,8 +459,6 @@ try {
                               <a href="description_salle.php?id=<?= $result->id_salle  ?>">
                                 <i class="fas fa-eye text-primary ms-1 opacity-10 fa-sm"></i>
                               </a>
-                              <!-- <a href="">
-                              </a> -->
                             </td>
                           </tr>
                         <?php endforeach; ?>
@@ -541,7 +539,7 @@ try {
     });
 }
 
-    </script>
+  </script>
   
     <script type="text/javascript">
     $(document).ready(function(){
