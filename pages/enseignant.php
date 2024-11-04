@@ -2,7 +2,7 @@
 require '../includes/DatabaseConnexion.php';
 session_start();
 
-$sql = "SELECT * FROM salle";
+$sql = "SELECT * FROM enseignant";
 $query = $dbh->query($sql);
 $results = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -22,16 +22,16 @@ try {
     }
 
     // Requête sécurisée avec PDO
-    $sql = "DELETE FROM salle WHERE id_salle = :id";
+    $sql = "DELETE FROM enseignant WHERE id_enseignant = :id";
     $query = $dbh->prepare($sql);
     $query->bindParam(':id', $id, PDO::PARAM_INT);
 
     // Exécution de la requête et gestion des erreurs
     if ($query->execute()) {
-      echo "<script>alert('Salle Bien Supprimée');</script>";
+      echo "<script>alert('enseignant Bien Supprimée');</script>";
 
       // Utilisez une redirection sécurisée
-      header("Location: salle.php");
+      header("Location: enseignant.php");
       exit;
     } else {
       // Affichage d'un message d'erreur générique pour éviter de donner des détails à un attaquant
@@ -44,100 +44,14 @@ try {
   echo "<script>alert('Une erreur est survenue. Veuillez réessayer plus tard.');</script>";
   exit;
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<style>
-  /* Customize the 'Show entries' select dropdown */
-  .dataTables_length {
-    margin-left: 15px !important;
-  }
 
-  .dataTables_length select {
-    margin-left: 13px !important;
-    margin-right: 5px !important;
-    width: 60px;
-    /* Adjust width */
-    height: 35px;
-    /* Adjust height */
-    border: 1px solid #fff;
-    border-radius: 10px;
-    padding: 5px;
-    color: #fff;
-    background-color: #5e72e4;
-    font-size: 14px;
-  }
-
-  /* Customize the search input */
-  .dataTables_filter input {
-    margin-right: 1.5rem !important;
-    width: 200px;
-    /* Adjust width */
-    height: 35px;
-    /* Adjust height */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding-left: 10px;
-    color: #333;
-    font-size: 14px;
-  }
-
-  /* Customize pagination buttons */
-  .dataTables_paginate .paginate_button {
-    background-color: #007bff;
-    /* Set background color */
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin: 0 2px;
-    font-size: 14px;
-    transition: background-color 0.3s;
-  }
-
-  .dataTables_paginate .paginate_button:hover {
-    background-color: #0056b3;
-    /* Darker color on hover */
-  }
-
-  /* Customize active pagination button */
-  .dataTables_paginate .paginate_button.current {
-    background-color: #0056b3;
-    color: #fff;
-    font-weight: bold;
-  }
-
-  .dataTables_paginate .paginate_button {
-    background-color: #5e72e3;
-  }
-
-
-  #table_salle_info {
-    margin-left: 15px !important;
-  }
-
-  .dataTables_wrapper .dataTables_length,
-  .dataTables_wrapper .dataTables_filter,
-  .dataTables_wrapper .dataTables_info,
-  .dataTables_wrapper .dataTables_processing,
-  .dataTables_wrapper .dataTables_paginate {
-    color: #cfd3db !important;
-  }
-
-  /* Remove border between table rows */
-  .dataTable tbody tr {
-    border-bottom: none;
-    border-color: #f4f5f7;
-    /* Remove bottom border for each row */
-  }
-
-  #table_salle {
-    border-bottom: 1px solid #f4f5f7;
-  }
-</style>
 <!-- HEAD -->
 <?php include '../includes/head.php' ?>
+
+
 
 <body class="g-sidenav-show   bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
@@ -385,113 +299,302 @@ try {
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
-              <!-- <h6>Authors table</h6> -->
-              <div class="d-flex align-items-center">
-                <p class="mb-0">Salle</p>
-                <a class="btn btn-primary btn-sm ms-auto" href="ajouter_salle.php">Ajouter Salle</a>
-                <button type="button" class="btn btn-primary btn-sm ms-auto" onclick="expo()" id='btnexp'>Exporter</button>
-              </div>
+              <h6>Authors table</h6>
             </div>
-            <div id="editData" class="modal fade text-center" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Modifier Salle</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body" id="info_update">
-                    <!-- Le contenu sera chargé ici par AJAX -->
-                    <?php
-                    include("edit_salle.php");
-                    ?>
-                  </div>
-                  <div class="modal-footer ">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <form method="post">
-              <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
-                  <table class="table align-items-center mb-0" id="table_salle">
-                    <thead>
-                      <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom Salle</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Etage</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Capacite Eleve</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">N° Chaise</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Bureau</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">N° Tableau</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Equipement</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php if ($query->rowCount() > 0) { ?>
-                        <?php foreach ($results as $result) : ?>
-                          <tr>
-                            <td>
-                              <div class="d-flex px-2 py-1">
-                                <div>
-                                  <img src="https://elaraki.ac.ma/images/logo2.png" class="avatar avatar-sm me-3" alt="user1">
-                                </div>
-                                <div class="d-flex flex-column justify-content-center">
-                                  <?= $result->nom_salle; ?>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0" id="table_salle">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Author</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">specialite</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">date embauche</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">salaire</th>
+                      <th class="text-secondary opacity-7"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if ($query->rowCount() > 0) { ?>
+                      <?php foreach ($results as $result) : ?>
+                        <tr>
+                          <td>
+                            <div class="d-flex px-2 py-1">
+                              <div>
+                                <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
+                              </div>
+                              <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><?= $result->nom_enseignant . ' ' . $result->prenom_enseignant ?></h6>
+                                <p class="text-xs text-secondary mb-0"><?= $result->email_enseignant ?></p>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">Enseignant</p>
+                            <p class="text-xs text-secondary mb-0"><?= $result->specialite ?></p>
+                          </td>
+                          <td class="align-middle text-center">
+                            <div class="d-flex align-items-center justify-content-center">
+                              <span class="me-2 text-xs font-weight-bold"><?= $result->degree ?>%</span>
+                              <div>
+                                <div class="progress">
+                                  <div class="progress-bar <?php if($result->degree<=30){echo 'bg-gradient-danger';} if($result->degree<=50 && $result->degree>30){echo 'bg-gradient-warning';}  if($result->degree>=30 && $result->degree<90){echo 'bg-gradient-info';} if($result->degree>=90){echo 'bg-gradient-success';} ?>" role="progressbar" aria-valuenow="<?= $result->degree ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $result->degree ?>%;"></div>
                                 </div>
                               </div>
-                            </td>
+                            </div>
+                          </td>
+                          <?php if ($result->est_connecte == 0) { ?>
                             <td class="align-middle text-center text-sm">
-                              <p class="text-xs font-weight-bold mb-0"><?= $result->etage; ?></p>
+                              <span class="badge badge-sm bg-gradient-secondary">Offline</span>
                             </td>
-                            <td>
-                              <p class="text-xs font-weight-bold mb-0 ms-lg-5 ms-5"><?= $result->capacite_salle; ?></p>
+                          <?php } else { ?>
+                            <td class="align-middle text-center text-sm">
+                              <span class="badge badge-sm bg-gradient-success">Offline</span>
                             </td>
-                            <td class="align-middle text-center">
-                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_chaise; ?></p>
-                            </td>
-                            <td class="align-middle text-center">
-                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_bureau; ?></p>
-                            </td>
-                            <td class="align-middle text-center">
-                              <p class="text-xs font-weight-bold mb-0"><?= $result->nbr_tableau; ?></p>
-                            </td>
-                            <td class="align-middle text-center">
-                              <?php
-                              $equipements = $result->equipements;
-                              $equipement = explode("-", $equipements);
-                              foreach ($equipement as $equi) :
-                              ?>
-                                <p class="text-xs font-weight-bold mb-0">-<?= $equi; ?></p>
-                              <?php endforeach; ?>
-                            </td>
-                            <td class="align-middle text-center">
-                              <a href="javascript:void(0);">
-                                <i class="ni ni-ruler-pencil text-success me-1 opacity-10 edit_data ni-sm" id="<?php echo $result->id_salle ?>"></i>
-                              </a>
-                              <a href="salle.php?id=<?= $result->id_salle ?>&del=1" onClick="return confirm('Etes-vous sûr que vous voulez supprimer?')">
-                                <i class="ni ni-fat-remove text-danger ms-1 opacity-10 ni-sm" id="<?= $result->id_salle ?>"></i>
-                              </a>
-                              <a href="description_salle.php?id=<?= $result->id_salle  ?>">
-                                <i class="fas fa-eye text-primary ms-1 opacity-10 fa-sm"></i>
-                              </a>
-                            </td>
-                          </tr>
-                        <?php endforeach; ?>
-                      <?php } else { ?>
-                        <tr rowspan="7" class="text-center">
-                          <td class="text-center">
-                            No Content
+                          <?php } ?>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold"><?= $result->date_naissance ?></span>
+                          </td>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold"><?= $result->salaire ?> DH</span>
+                          </td>
+                          <td class="align-middle">
+                            <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                              Edit
+                            </a>
                           </td>
                         </tr>
-                      <?php  } ?>
-                    </tbody>
-                  </table>
-                </div>
+                      <?php endforeach; ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
               </div>
-            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>Projects table</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Spotify</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">working</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">60%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-invision.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Invision</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$5,000</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">done</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">100%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-jira.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Jira</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$3,400</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">canceled</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">30%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Slack</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$1,000</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">canceled</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">0%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-webdev.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Webdev</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$14,000</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">working</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">80%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm rounded-circle me-2" alt="xd">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Adobe XD</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$2,300</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">done</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">100%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -501,6 +604,7 @@ try {
     </div>
   </main>
 
+  
   <!-- Ton script AJAX pour l'édition de la salle -->
   <script>
     $(document).ready(function() {
@@ -562,24 +666,7 @@ try {
     }
   </script>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $(document).on('click', '.edit_data', function() {
-        var edit_id = $(this).attr('id');
-        $.ajax({
-          url: "edit_salle.php",
-          type: "post",
-          data: {
-            edit_id: edit_id
-          },
-          success: function(data) {
-            $("#info_update").html(data);
-            $("#editData").modal('show');
-          }
-        });
-      });
-    });
-  </script>
+
 
 
   <!-- FIXED PLUGIN  -->

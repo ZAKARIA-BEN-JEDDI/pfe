@@ -71,6 +71,14 @@
             </div>
             <span class="nav-link-text ms-1">Salles</span>
           </a>
+        </li>      
+        <li class="nav-item">
+          <a class="nav-link " href="../pages/enseignant.php">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Enseignant</span>
+          </a>
         </li>
 
         <li class="nav-item">
@@ -286,8 +294,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                    <!-- <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i> -->
-                    <i class="ni ni-building text-light text-lg opacity-10"></i>
+                    <i class="ni ni-building text-light text-lg opacity-10"  aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -300,7 +307,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Nombre eleves</p>
                     <h5 class="font-weight-bolder">
                       2,300
                     </h5>
@@ -312,7 +319,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                    <i class="ni ni-single-02 text-light text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>

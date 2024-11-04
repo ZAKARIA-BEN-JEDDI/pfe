@@ -4,7 +4,8 @@ include('../includes/DatabaseConnexion.php');
 $result = [];
 if (isset($_POST['edit_id'])) {
     $id = intval($_POST['edit_id']);
-    
+    echo "<script type='text/javascript'>alert('ID: " . $id . "');</script>";
+
     // Validation de l'ID pour être sûr qu'il soit un nombre valide
     if (filter_var($id, FILTER_VALIDATE_INT)) {
         $sql = "SELECT * FROM salle WHERE id_salle = :id";
@@ -13,58 +14,59 @@ if (isset($_POST['edit_id'])) {
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    if (isset($_POST['modifier_salle'])) {
+      $id = intval($_POST['edit_id']);
+    
+      // exit();
+      //   // Validation des données d'entrée
+      $nomSalle = filter_var($_POST['nom_salle'], FILTER_SANITIZE_STRING);
+      $equipement = filter_var($_POST['equipement'], FILTER_SANITIZE_STRING);
+      $etage = filter_var($_POST['etage'], FILTER_VALIDATE_INT);
+      $capacite = filter_var($_POST['capacite'], FILTER_VALIDATE_INT);
+      $nombreChaise = filter_var($_POST['nbr_chaise'], FILTER_VALIDATE_INT);
+      $nombreBureau = filter_var($_POST['nbr_bureau'], FILTER_VALIDATE_INT);
+      $nombreTableau = filter_var($_POST['nbr_tableau'], FILTER_VALIDATE_INT);
+  
+      if (
+          $nomSalle !== false && $equipement !== false && $etage !== false &&
+          $capacite !== false && $nombreChaise !== false &&
+          $nombreBureau !== false && $nombreTableau !== false
+      ) {
+          // Requête de mise à jour sécurisée
+          $sql = "UPDATE salle
+                  SET nom_salle = :nom_salle, 
+                      capacite_salle = :capacite_salle, 
+                      etage = :etage, 
+                      equipements = :equipements, 
+                      nbr_chaise = :nombre_chaise, 
+                      nbr_bureau = :nombre_bureau, 
+                      nbr_tableau = :nombre_tableau
+                  WHERE id_salle = :id";
+  
+          $query = $dbh->prepare($sql);
+          $query->bindParam(":nom_salle", $nomSalle, PDO::PARAM_STR);
+          $query->bindParam(":capacite_salle", $capacite, PDO::PARAM_INT);
+          $query->bindParam(":etage", $etage, PDO::PARAM_INT);
+          $query->bindParam(":equipements", $equipement, PDO::PARAM_STR);
+          $query->bindParam(":nombre_chaise", $nombreChaise, PDO::PARAM_INT);
+          $query->bindParam(":nombre_bureau", $nombreBureau, PDO::PARAM_INT);
+          $query->bindParam(":nombre_tableau", $nombreTableau, PDO::PARAM_INT);
+          $query->bindParam(":id", $id, PDO::PARAM_INT);
+  
+          $query->execute();
+      } else {
+          // Gestion des erreurs pour les données invalides
+          echo "Veuillez vérifier les informations saisies.";
+      }
+    }
 }else{
   header("Refresh:0");
 }
-
-if (isset($_POST['modifier'])) {
-    $id = intval($_POST['edit_id']);
-    // header('location:dashboard.php');
-    // exit();
-    //   // Validation des données d'entrée
-    // $nomSalle = filter_var($_POST['nom_salle'], FILTER_SANITIZE_STRING);
-    // $equipement = filter_var($_POST['equipement'], FILTER_SANITIZE_STRING);
-    // $etage = filter_var($_POST['etage'], FILTER_VALIDATE_INT);
-    // $capacite = filter_var($_POST['capacite'], FILTER_VALIDATE_INT);
-    // $nombreChaise = filter_var($_POST['nbr_chaise'], FILTER_VALIDATE_INT);
-    // $nombreBureau = filter_var($_POST['nbr_bureau'], FILTER_VALIDATE_INT);
-    // $nombreTableau = filter_var($_POST['nbr_tableau'], FILTER_VALIDATE_INT);
-
-    // if (
-    //     $nomSalle !== false && $equipement !== false && $etage !== false &&
-    //     $capacite !== false && $nombreChaise !== false &&
-    //     $nombreBureau !== false && $nombreTableau !== false
-    // ) {
-    //     // Requête de mise à jour sécurisée
-    //     $sql = "UPDATE salle
-    //             SET nom_salle = :nom_salle, 
-    //                 capacite_salle = :capacite_salle, 
-    //                 etage = :etage, 
-    //                 equipements = :equipements, 
-    //                 nbr_chaise = :nombre_chaise, 
-    //                 nbr_bureau = :nombre_bureau, 
-    //                 nbr_tableau = :nombre_tableau
-    //             WHERE id_salle = :id";
-
-    //     $query = $dbh->prepare($sql);
-    //     $query->bindParam(":nom_salle", $nomSalle, PDO::PARAM_STR);
-    //     $query->bindParam(":capacite_salle", $capacite, PDO::PARAM_INT);
-    //     $query->bindParam(":etage", $etage, PDO::PARAM_INT);
-    //     $query->bindParam(":equipements", $equipement, PDO::PARAM_STR);
-    //     $query->bindParam(":nombre_chaise", $nombreChaise, PDO::PARAM_INT);
-    //     $query->bindParam(":nombre_bureau", $nombreBureau, PDO::PARAM_INT);
-    //     $query->bindParam(":nombre_tableau", $nombreTableau, PDO::PARAM_INT);
-    //     $query->bindParam(":id", $id, PDO::PARAM_INT);
-
-    //     $query->execute();
-    // } else {
-    //     // Gestion des erreurs pour les données invalides
-    //     echo "Veuillez vérifier les informations saisies.";
-    // }
-}
 ?>
 
-<form method="post">
+<form method="post" action="#">
   <div class="card-body">
     <p class="text-uppercase text-sm">Salle Information</p>
     <div class="row">
@@ -122,7 +124,7 @@ if (isset($_POST['modifier'])) {
     </div>
     <hr class="horizontal dark">
     <div class="row">
-      <input class="btn btn-primary" type="submit" value="Modifier" name="modifier">
+      <input class="btn btn-primary" type="submit" value="Modifier" name="modifier_salle">
     </div>
   </div>
 </form>

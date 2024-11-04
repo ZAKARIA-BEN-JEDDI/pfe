@@ -100,6 +100,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link " href="../pages/enseignant.php">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Enseignant</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link " href="../pages/billing.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
@@ -348,19 +356,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Chaise</label>
-                      <input class="form-control" type="number" min="10" max="15" name="nombre_chaise" id="chaise"  onchange="chaiseChange()">
+                      <input class="form-control" type="number" min="10" max="15" name="nombre_chaise" id="chaise" onchange="chaiseChange()">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Bureau</label>
-                      <input class="form-control" type="number" min="1" max="2" name="nombre_bureau" id="bureau"  onchange="bureauChange()">
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_bureau" id="bureau" onchange="bureauChange()">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">Nombre Tableau</label>
-                      <input class="form-control" type="number" min="1" max="2" name="nombre_tableau" id="tableau"  onchange="tableauChange()">
+                      <input class="form-control" type="number" min="1" max="2" name="nombre_tableau" id="tableau" onchange="tableauChange()">
                     </div>
                   </div>
                 </div>
@@ -453,27 +461,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     }
   </script>
   <script>
-    const nom_salleChange = () =>{
-      document.getElementById("nom_salle_value").innerText = document.getElementById("nom_salle").value ;
+    const nom_salleChange = () => {
+      document.getElementById("nom_salle_value").innerText = document.getElementById("nom_salle").value;
     }
-    const capaciteChange = () =>{
-      document.getElementById("capacite_value").innerText = document.getElementById("capacite").value ;
+    const capaciteChange = () => {
+      document.getElementById("capacite_value").innerText = document.getElementById("capacite").value;
     }
     const etageChange = () => {
       console.log(document.getElementById("etage").value);
       document.getElementById("etage_value").innerText = document.getElementById("etage").value;
     };
-    const equipementChange = () =>{
-      document.getElementById("equipement_value").innerText = document.getElementById("equipement").value ;
+    const equipementChange = () => {
+      document.getElementById("equipement_value").innerText = document.getElementById("equipement").value;
     }
-    const chaiseChange = () =>{
-      document.getElementById("chaise_value").innerText = document.getElementById("chaise").value ;
+    const chaiseChange = () => {
+      document.getElementById("chaise_value").innerText = document.getElementById("chaise").value;
     }
-    const bureauChange = () =>{
-      document.getElementById("bureau_value").innerText = document.getElementById("bureau").value ;
+    const bureauChange = () => {
+      document.getElementById("bureau_value").innerText = document.getElementById("bureau").value;
     }
-    const tableauChange = () =>{
-      document.getElementById("tableau_value").innerText = document.getElementById("tableau").value ;
+    const tableauChange = () => {
+      document.getElementById("tableau_value").innerText = document.getElementById("tableau").value;
     }
   </script>
   <!-- Github buttons -->
