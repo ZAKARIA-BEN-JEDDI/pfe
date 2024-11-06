@@ -298,12 +298,17 @@ try {
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header pb-0">
-              <h6>Authors table</h6>
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6>Ensaignant table</h6>
+              <div class="">
+                <a class="btn btn-primary btn-sm ms-auto" href="#">Ajouter Ensaignant</a>
+                <a class="btn btn-primary btn-sm ms-auto" href="#">Exporter</a>
+              </div>
             </div>
+            <hr>
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0" id="table_salle">
+                <table class="table align-items-center mb-0" id="table_ensaignant">
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Author</th>
@@ -312,6 +317,7 @@ try {
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">date embauche</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">salaire</th>
+                      <!-- <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th> -->
                       <th class="text-secondary opacity-7"></th>
                     </tr>
                   </thead>
@@ -604,16 +610,19 @@ try {
     </div>
   </main>
 
-  
-  <!-- Ton script AJAX pour l'édition de la salle -->
-  <script>
+  <!-- FIXED PLUGIN  -->
+  <?php include '../includes/fixedplugin.php' ?>
+
+  <!-- call script export ensaignant -->
+  <!-- <script src="../assets/js/ensaignant/export.js"></script> -->
+  <script type="text/javascript">
     $(document).ready(function() {
-      $('#table_salle').DataTable(); // Initialize DataTable
+      $('#table_ensaignant').DataTable(); // Initialize DataTable
     });
 
     function expo() {
       // Obtain DataTable instance
-      var table = $('#table_salle').DataTable();
+      var table = $('#table_ensaignant').DataTable();
 
       // Create data array for headers and rows
       var data = [];
@@ -666,11 +675,6 @@ try {
     }
   </script>
 
-
-
-
-  <!-- FIXED PLUGIN  -->
-  <?php include '../includes/fixedplugin.php' ?>
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
