@@ -309,11 +309,11 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Nombre eleves</p>
                     <h5 class="font-weight-bolder">
-                      2,300
+                      5,100
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
-                      since last week
+                      <span class="text-success text-sm font-weight-bolder">+6%</span>
+                      depuis l'année dernière
                     </p>
                   </div>
                 </div>
@@ -332,7 +332,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Ensaignant</p>
                     <h5 class="font-weight-bolder">
                       +3,462
                     </h5>
@@ -344,7 +344,8 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                    <!-- <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i> -->
+                    <i class="ni ni-single-02 text-light text-lg opacity-10"></i>
                   </div>
                 </div>
               </div>
@@ -357,12 +358,12 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Sales</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Abscence</p>
                     <h5 class="font-weight-bolder">
-                      $103,430
+                      19
                     </h5>
                     <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+5%</span> than last month
+                      <span class="text-warning text-sm font-weight-bolder">-4%</span> than last day x
                     </p>
                   </div>
                 </div>
