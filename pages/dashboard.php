@@ -28,6 +28,35 @@
   
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <style>
+      /* CSS styles for the button */
+      .card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Style the "See More" button */
+      .see-more-btn {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        background-color: #ffc107;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: bold;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Show button on hover */
+      .card:hover .see-more-btn {
+        display: inline-block;
+      }
+  </style>
 </head>
 
 
@@ -369,7 +398,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                    <i class="fas fa-user-slash text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>

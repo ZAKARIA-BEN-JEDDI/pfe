@@ -29,13 +29,13 @@
     <link rel="stylesheet" href="../assets/css/datatable.css">
 
     <style>
-        body {
-  box-sizing: border-box;
-  padding: 0;
-  margin:0;
-  background-color: white;
-  height: 100vh;
-}
+			body {
+			box-sizing: border-box;
+			padding: 0;
+			margin:0;
+			background-color: white;
+			height: 100vh;
+			}
 
 .cursor {
     pointer-events: none;
